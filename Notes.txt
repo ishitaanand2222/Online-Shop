@@ -1,0 +1,29 @@
+Node.js only uses a single javascript thread, (thread is like a process).Event loops run automatically when the code is being executed, it is resposible for handling 
+callbacks. Event loop will only handle fast executing code . There is a worker pool which is responsible for all the heavy lifting and it is kind of detached from the 
+JS code and it used multiple threads. After completing the execution of the task worker pool has it will trigger the callbacks which can be executed with the event loop
+
+Event loops checks for timer functions as 1st step, 2nd step -> it checks pending callback(executes i/o callbacks) next is looks for Poll i.e in this it will retrieve new i/o events 
+and executes it callback, next we have is Check which will execute immediate callbacks after executing all open callbacks, next we have is close callbacks
+
+
+//Module 4 summary
+npm is allows us to manage our node project and its dependencies, we can initialize our project with npm init. We can define npm scripts in package.json file which can help us give 
+shortcuts for commands. 
+Node project dont use core modules and custom code but also 3rd party packages. We can install them via npm.
+We can diffrentiate between production(--save), development(--save -dev) and global dependencies(-g)
+Error(syntax, runtime, logical)
+Debugging-> use vs code node debugger, looks into variables at runtime and we can also multiple breakpoints.
+
+//Module 5(Express.js)
+framework(helper functions, tools and rules that help u build your application) which helps u to write cleaner code without dwelling into writing all the nitty-gritty stuff
+middleware, helps in working with request and response elegantly, rounting,return html page
+Alternative of express.js --> Vanilla node.js, Adonis.js, Koa, Sail.js
+Express.js is highly flexible and extensible (there are 100's and 1000's of 3rd party packages built for express which we can add easily, which is it's greatest strength)
+request -> middleware(next) -> middleware(res.send) ->response
+express.js is a node.js framework. It is highly extensible and other packages can be plugged into it.
+Express.js relies heavily on the middleware functions which we can call easily by using use(). Middleware functions handle a request and should call next() to forward request to the next function 
+in line
+Rounting- u can filter request by path and method(app.get() or app.post()). if we filter by method, paths are matched exactly,otherwise first segment is matched
+We can use express.Router() to split our routes across different files.
+Serve files- we are not limited to serving dummy text as a response.U can sendFile() also to users. 
+If a request is directly made for a file(eg a .css file is requested), u can enable static serving for such files via express.static()
