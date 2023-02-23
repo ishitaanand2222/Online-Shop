@@ -12,8 +12,15 @@ const path = require('path');
 //Third party packages
 const express = require('express');
 const bodyParser = require('body-parser');
+//const expressHbs = require('express-handlebars');
 
 const app = express();
+
+app.set('view engine', 'ejs');
+//app.engine('hbs', expressHbs({layoutsDir: 'views/layouts/', defaultLayout: 'main-layout', extname: 'hbs'}));//it helps in registering those handle bars which are not built in, pug was built in but not handlebars
+//app.set('view engine', 'hbs');//now hbs is the way we'll use it now
+//app.set('view engine', 'pug');
+app.set('views','views');
 
 const adminData = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
@@ -25,7 +32,7 @@ app.use('/admin',adminData.routes);//here we are filtering i.e all files whose r
 app.use(shopRoutes);
 
 app.use((req,res,next) => {
-    res.status(404).sendFile(path.join(__dirname,'views','404.html'));//since here we are on the root folder hence we wont add '../'
+    res.status(404).render('404', {pageTitle:"Page Not Found"})//looking for 404 pug template
 })
 
 
