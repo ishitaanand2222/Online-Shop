@@ -27,3 +27,9 @@ Rounting- u can filter request by path and method(app.get() or app.post()). if w
 We can use express.Router() to split our routes across different files.
 Serve files- we are not limited to serving dummy text as a response.U can sendFile() also to users. 
 If a request is directly made for a file(eg a .css file is requested), u can enable static serving for such files via express.static()
+
+
+//Module 6(MVC)
+model-responsible for reprsenting your data, responsible for managing your data. Dosent matter if u manage data in memory,file,databases.Contains data related logical
+views - what the users sees, shouldnt contain too much logic(like, handlebars)
+controller - connects Model and Views. Should only make sure that the two communicate(in both directions)

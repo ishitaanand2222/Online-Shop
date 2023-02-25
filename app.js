@@ -14,6 +14,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 //const expressHbs = require('express-handlebars');
 
+const errorController = require('./controllers/error');
+
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -22,18 +24,16 @@ app.set('view engine', 'ejs');
 //app.set('view engine', 'pug');
 app.set('views','views');
 
-const adminData = require('./routes/admin');
+const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
 app.use(bodyParser.urlencoded({extended: false}));//creating another middleware, this middleware also has next function so that we can continue with the next middlewares
 app.use(express.static(path.join(__dirname,'public')));//it serves static files,it takes a path to the file to which we want to give read access to
 
-app.use('/admin',adminData.routes);//here we are filtering i.e all files whose route start with /admin will get into the adminRoutes middleware and when it reaches adminRoutes then it will not check /admin
+app.use('/admin',adminRoutes);//here we are filtering i.e all files whose route start with /admin will get into the adminRoutes middleware and when it reaches adminRoutes then it will not check /admin
 app.use(shopRoutes);
 
-app.use((req,res,next) => {
-    res.status(404).render('404', {pageTitle:"Page Not Found"})//looking for 404 pug template
-})
+app.use(errorController.get404);
 
 
 // app.use((req, res, next) => {//after app and before creating server, it allows us to add a new middleware function
