@@ -3,21 +3,18 @@ const express = require('express');
 
 const rootDir = require('../util/path');
 
-const productsController = require('../controllers/products');
+const adminController = require('../controllers/admin');
 
 const router = express.Router();
 
+// admin/add-product
+router.get('/add-product', adminController.getAddProduct);
 
-//router.use can be used for both get and post hence for only get request we can have router.get(), similarly for post, get.post()
-router.get('/add-product', productsController.getAddProduct);// this path can be anything 
-    //after router and before creating server, it allows us to add a new middleware function
-    //it also automatically sets the header,though we can also do it explicitly by res.setHeader();
-    //res.send is also an indication of not putting next in here
-    //here we have injected the dirname into rootDir variable 
-    //res.sendFile(path.join(rootDir,'views','add-product.html'));
+//admin/products
+router.get('/products', adminController.getProducts);
 
-
-router.post('/add-product', productsController.postAddProduct);
+// admin/add-product
+router.post('/add-product', adminController.postAddProduct);
 
 module.exports = router;
 // exports.routes = router;
