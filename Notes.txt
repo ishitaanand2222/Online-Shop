@@ -33,3 +33,9 @@ If a request is directly made for a file(eg a .css file is requested), u can ena
 model-responsible for reprsenting your data, responsible for managing your data. Dosent matter if u manage data in memory,file,databases.Contains data related logical
 views - what the users sees, shouldnt contain too much logic(like, handlebars)
 controller - connects Model and Views. Should only make sure that the two communicate(in both directions)
+
+//Module 7
+Dynamic Routing - we can pass dynamic path by adding ":" to the Express router path. The name which we add after ":" is the name we extract the data on req.params
+Optional query parameters can also be passed using (?param=value&b=2)and can be extracted using req.query.(name of param)
+Cart Model only holds a static methods. We can also interact between models(eg delete cart item if a product is deleted from product model)
+working with files is suboptimal
