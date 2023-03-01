@@ -14,7 +14,9 @@ exports.postAddProduct = (req,res,next) => {
     const price = req.body.price;
     const description = req.body.description;
     const product = new Product(null,title,imageUrl,description,price);//null is passed for every NEW product added
-    product.save();
+    product.save().then(()=>{
+        res.redirect('/');
+    }).catch(err => console.log(err))
     res.redirect('/');
 }
 

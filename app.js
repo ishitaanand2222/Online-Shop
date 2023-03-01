@@ -15,6 +15,7 @@ const bodyParser = require('body-parser');
 //const expressHbs = require('express-handlebars');
 
 const errorController = require('./controllers/error');
+const db = require('./util/database');
 
 const app = express();
 
@@ -26,6 +27,14 @@ app.set('views','views');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
+
+//promise helps us to get rid of callbacks using its then() and catch() functionalities
+// db.execute('Select* from products')//since our db is having a promise(it allows us to work with asych code) and promise have two functions then and catch
+// .then((result)=>{
+//     console.log(result[0], result[1]);
+// }).catch( err =>{
+//     console.log(err);
+// })
 
 app.use(bodyParser.urlencoded({extended: false}));//creating another middleware, this middleware also has next function so that we can continue with the next middlewares
 app.use(express.static(path.join(__dirname,'public')));//it serves static files,it takes a path to the file to which we want to give read access to

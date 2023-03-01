@@ -2,35 +2,40 @@ const Product = require('../models/product');
 const Cart = require('../models/cart');
 
 exports.getProducts = (req, res, next) =>{
-        Product.fetchAll(products => {
-        res.render('shop/product-list',{ 
-            prods: products, 
-            pageTitle: 'All Products', 
-            path:'/products', 
-           });
-    }) ;
+        Product.fetchAll()
+        .then(([rows, fieldData]) => {
+            res.render('shop/product-list',{ 
+                prods: rows, 
+                pageTitle: 'All Products', 
+                path:'/products', 
+               });
+        })
+        .catch( err => console.log(err) )
 }
 
 //this will help us extract the dynamic ID of each product
 exports.getProduct = (req,res,next) => {
     const prodId = req.params.productId;//this productId will have the same variable name as the one which we used in the route
-    Product.findById(prodId, product => {
+    Product.findById(prodId)
+    .then(([product]) => {
         res.render('shop/product-detail', {
-            product: product,
+            product: product[0],
             pageTitle: product.title,
             path: '/products'
-        });//here we are rendering the view shop/product-detail, and product on left side is the key which we will be using to access the view and on the right is the product which we are passing
+        });
     })
-  //  res.redirect("/");
+    .catch(err=> console.log(err));
 }
 exports.getIndex =(req, res, next) =>{
-    Product.fetchAll(products => {
+    Product.fetchAll()
+    .then(([rows, fieldData]) => {
         res.render('shop/index',{ 
-            prods: products, 
+            prods: rows, 
             pageTitle: 'Shop', 
             path:'/', 
            });
-    }) ;
+    })
+    .catch(err => console.log(err) );
 }
 
 exports.getCart = (req,res,next) => {
