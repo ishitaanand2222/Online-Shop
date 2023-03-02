@@ -1,13 +1,10 @@
-//this is will help us to connect to the SQL database
-const mysql = require('mysql2');
+const Sequelize = require('sequelize');
 
-//since for our project connecting to the database we need to a connection and for each query we want a new connection and that connection should be close.
-//But the better of making that connection is to make a connection pool wherein a query can take connection as and when it needs
-const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    database: 'node-complete',
-    password: ''
+//this will automatically connect to database, or it will create a connection pool + has all features of sequelize package
+const sequelize = new Sequelize('node-complete','root','ishitaanand1*',{
+    dialect: 'mysql',
+    host: 'localhost'
 });
 
-module.exports = pool.promise();
+
+module.exports = sequelize;

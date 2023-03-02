@@ -39,3 +39,5 @@ Dynamic Routing - we can pass dynamic path by adding ":" to the Express router p
 Optional query parameters can also be passed using (?param=value&b=2)and can be extracted using req.query.(name of param)
 Cart Model only holds a static methods. We can also interact between models(eg delete cart item if a product is deleted from product model)
 working with files is suboptimal
+
+//Mof
