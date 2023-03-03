@@ -2,24 +2,35 @@ const Product = require('../models/product');
 const Cart = require('../models/cart');
 
 exports.getProducts = (req, res, next) =>{
-        Product.fetchAll()
-        .then(([rows, fieldData]) => {
-            res.render('shop/product-list',{ 
-                prods: rows, 
-                pageTitle: 'All Products', 
-                path:'/products', 
-               });
+        Product.findAll().then(products => {
+            res.render('shop/product-list',{
+                prods: products,
+                pageTitle: 'All Products',
+                path: '/products'
+            })
         })
-        .catch( err => console.log(err) )
+        .catch(err => {
+            console.log(err);
+        })
 }
 
 //this will help us extract the dynamic ID of each product
 exports.getProduct = (req,res,next) => {
     const prodId = req.params.productId;//this productId will have the same variable name as the one which we used in the route
-    Product.findById(prodId)
-    .then(([product]) => {
+    // Product.findAll({where: {id: prodId}})//findAll can also be used to retrieve all products, but it returns an array of products
+    // .then(products => {
+    //     res.render('shop/product-detail', {
+    //         product: products[0],
+    //         pageTitle: products[0].title,
+    //         path: '/products'
+    //     });
+    // })
+    // .catch(err => {console.log(err)})
+    //retrieving products using findByPk()//this gives only a single product
+    Product.findByPk(prodId)//here in sequalize we dont get an array of products, rather we just get a single product
+    .then((product) => {
         res.render('shop/product-detail', {
-            product: product[0],
+            product: product,
             pageTitle: product.title,
             path: '/products'
         });
@@ -27,15 +38,17 @@ exports.getProduct = (req,res,next) => {
     .catch(err=> console.log(err));
 }
 exports.getIndex =(req, res, next) =>{
-    Product.fetchAll()
-    .then(([rows, fieldData]) => {
+    Product.findAll().then(products => {
         res.render('shop/index',{ 
-            prods: rows, 
+            prods: products, 
             pageTitle: 'Shop', 
             path:'/', 
            });
     })
-    .catch(err => console.log(err) );
+    .catch(err => {
+        console.log(err);
+    })
+  //  Product.fetchAll()//fetchAll doesn't work with sequalize
 }
 
 exports.getCart = (req,res,next) => {
