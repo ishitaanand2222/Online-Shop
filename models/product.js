@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../util/database');
 
+                                //this is the name of model
 const Product = sequelize.define('product', {//here in this js object, we can write all our attributes
     id:{
         type: Sequelize.INTEGER,
