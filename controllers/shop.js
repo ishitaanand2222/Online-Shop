@@ -1,5 +1,6 @@
+const { or } = require('sequelize');
 const Product = require('../models/product');
-const Cart = require('../models/cart');
+//const Cart = require('../models/cart');
 
 exports.getProducts = (req, res, next) =>{
         Product.findAll().then(products => {
@@ -53,21 +54,21 @@ exports.getIndex =(req, res, next) =>{
 
 //here we would want to render the products associated with an existing user
 exports.getCart = (req,res,next) => {
-    // console.log(req.user.cart);we cannot access cart like this
     req.user
     .getCart()
     .then(cart => {
-        return cart.getProducts()
+        return cart
+        .getProducts()
         .then(products => {
             res.render('shop/cart',{
                 path:'/cart',
                 pageTitle: 'Your Cart',
                 products: products,
-            })
+            });
         })
         .catch(err => console.log(err) )  
     })
-    .catch(err => {console.log(err)})
+    .catch(err => console.log(err))
 };
 
 //deleting the product from the cart only
@@ -125,17 +126,42 @@ exports.postCart = (req,res,next) => {
     .catch(err => console.log(err));
 }
 
-
-exports.getOrders = (req,res,next) => {
-    res.render('shop/orders',{
-        path: '/orders',
-        pageTitle: 'Your Orders'
-    });
+exports.postOrder = (req,res,next) => {
+    let fetchedCart;
+    req.user
+    .getCart()
+    .then(cart => {
+        fetchedCart = cart;
+        return cart.getProducts();
+    })
+    .then(products => {
+        return req.user
+        .createOrder()
+        .then(order => {
+            return order.addProduct(products.map(product => {
+                product.orderItem = {quantity: product.cartItem.quantity};
+                return product;
+            }));
+        })
+        .catch(err => console.log(err));
+    })
+    .then(result => {
+        return fetchedCart.setProducts(null);//cleaning up the cart
+    })
+    .then(result => {
+        res.redirect('/orders');
+    })
+    .catch(err => console.log(err));
 }
 
-exports.getCheckout = (req,res,next) => {
-    res.render('shop/checkout',{
-        path: '/checkout',
-        pageTitle: 'Checkout'
+exports.getOrders = (req,res,next) => {
+    req.user.getOrders({include: ['products']})
+    .then(orders=> {
+        res.render('shop/orders',{
+            path: '/orders',
+            pageTitle: 'Your Orders',
+            orders: orders
+        });
     })
+    .catch(err => console.log(err));
 }
