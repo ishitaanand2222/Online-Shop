@@ -12,15 +12,19 @@ exports.postAddProduct = (req,res,next) => {
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const description = req.body.description;
-    Product.create({
+    req.user
+    .createProduct({//this automatically creates a connected model
         title: title,
         price: price,
         imageUrl: imageUrl,
-        description: description
-    }).then( result => {
+        description: description,
+        //userId: req.user.id//associating user to the new products
+    })//since in app.js we defined that user can have many products, hence sequelize automatically creates a new function createProduct(), for user becuz our model is named product
+    .then( result => {
         console.log('Product created');
         res.redirect('/admin/products');
-    }).catch( err => {
+    })
+    .catch( err => {
         console.log(err);
     })
 }
@@ -31,9 +35,11 @@ exports.getEditProduct = (req, res, next) => {
         return res.redirect('/');
     }
     const prodId = req.params.productId;
-    console.log(prodId);
-    Product.findByPk(prodId)
-    .then(product => {
+    req.user
+    .getProducts({where: {id: prodId}})
+    //Product.findByPk(prodId)
+    .then(products => {
+        const product = products[0];
         if(!product)
         return res.redirect('/');
 
@@ -71,7 +77,8 @@ exports.postEditProduct = (req,res,next) => {
 }
 
 exports.getProducts = (req,res,next) => {
-    Product.findAll()//we dont use callback approach with sequalize
+    req.user
+    .getProducts()
     .then(products => {
         res.render('admin/products',{
             prods: products,
