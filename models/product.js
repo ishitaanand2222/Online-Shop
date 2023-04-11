@@ -1,4 +1,4 @@
-const getDb = require('../util/database').getDb;
+const getDb = require('../util/database').getDb;//helps to get access to the database
 class Product{
     constructor(title, price, description, imageUrl){
         this.title = title;
@@ -8,30 +8,26 @@ class Product{
     }
 
     save(){
+        const db = getDb();
+        return db.collection('products')
+        .insertOne(this)
+        .then(result => console.log(result))
+        .catch(err => console.log(err));
+    }
 
+    static fetchAll(){
+        const db = getDb();
+        return db
+        .collection('products')
+        .find()//find function helps us return our data we can also filter this data
+        .toArray()//if we have less data, say 100 documents, then we can convert them into an array otherwise we can also use pagination for large data
+        .then(products => {
+            console.log(products);
+            return products;
+        })
+        .catch(err => console.log(err))
     }
 }
-                               //this is the name of model
-const Product = sequelize.define('product', {//here in this js object, we can write all our attributes
-    id:{
-        type: Sequelize.INTEGER,
-        autoIncrement:true,
-        allowNull: false,
-        primaryKey: true
-    },
-    title: Sequelize.STRING,
-    price:{
-        type: Sequelize.DOUBLE,
-        allowNull: false
-    },
-    imageUrl:{
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    description:{
-        type: Sequelize.STRING,
-        allowNull: false
-    }
-});
+
 
 module.exports = Product;

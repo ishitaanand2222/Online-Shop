@@ -13,14 +13,17 @@ exports.postAddProduct = (req,res,next) => {
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const description = req.body.description;
-    req.user
-    .createProduct({//this automatically creates a connected model
-        title: title,
-        price: price,
-        imageUrl: imageUrl,
-        description: description,
-        //userId: req.user.id//associating user to the new products
-    })//since in app.js we defined that user can have many products, hence sequelize automatically creates a new function createProduct(), for user becuz our model is named product
+    const product = new Product(title, price, description, imageUrl);
+    // req.user
+    // .createProduct({//this automatically creates a connected model
+    //     title: title,
+    //     price: price,
+    //     imageUrl: imageUrl,
+    //     description: description,
+    //     //userId: req.user.id//associating user to the new products
+    // })//since in app.js we defined that user can have many products, hence sequelize automatically creates a new function createProduct(), for user becuz our model is named product
+    product
+    .save()
     .then( result => {
         console.log('Product created');
         res.redirect('/admin/products');
@@ -30,29 +33,30 @@ exports.postAddProduct = (req,res,next) => {
     })
 }
 
-exports.getEditProduct = (req, res, next) => {
-    const editMode = req.query.edit;//here we are accessing the query. The extracted value is always a string 
-    if(!editMode){//if editMode is false
-        return res.redirect('/');
-    }
-    const prodId = req.params.productId;
-    req.user
-    .getProducts({where: {id: prodId}})
-    //Product.findByPk(prodId)
-    .then(products => {
-        const product = products[0];
-        if(!product)
-        return res.redirect('/');
+// exports.getEditProduct = (req, res, next) => {
+//     const editMode = req.query.edit;//here we are accessing the query. The extracted value is always a string 
+//     if(!editMode){//if editMode is false
+//         return res.redirect('/');
+//     }
+//     const prodId = req.params.productId;
+//     req.user
+//     .getProducts({where: {id: prodId}})
+//     //Product.findByPk(prodId)
+//     .then(products => {
+//         const product = products[0];
+//         if(!product)
+//         return res.redirect('/');
 
-        res.render('admin/edit-product',{
-            pageTitle: 'Edit Product',
-            path: '/admin/edit-product',
-            editing: editMode,
-            product: product
-        })
-    })
-    .catch(err => {console.log(err)});
-}
+//         res.render('admin/edit-product',{
+//             pageTitle: 'Edit Product',
+//             path: '/admin/edit-product',
+//             editing: editMode,
+//             product: product
+//         })
+//     })
+//     .catch(err => {console.log(err)});
+// }
+
 
 //here we will construct a new product and will replace the existing one with the new product
 exports.postEditProduct = (req,res,next) => {

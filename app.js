@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 
 
 const errorController = require('./controllers/error');
-const mongoConnect = require('./util/database');
+const mongoConnect = require('./util/database').mongoConnect;
 
 const app = express();
 
@@ -13,7 +13,7 @@ app.set('view engine', 'ejs');
 app.set('views','views');
 
 const adminRoutes = require('./routes/admin');
-// const shopRoutes = require('./routes/shop');
+const shopRoutes = require('./routes/shop');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname,'public')));//it serves static files,it takes a path to the file to which we want to give read access to
@@ -25,10 +25,11 @@ app.use((req,res,next) => {//app.use only registers the middleware, it doesnt ru
   //   next();
   // })
   // .catch(err => console.log(err));
+  next();
 })
 
 app.use('/admin',adminRoutes);
-// app.use(shopRoutes);
+app.use(shopRoutes);
 
 app.use(errorController.get404);
 
