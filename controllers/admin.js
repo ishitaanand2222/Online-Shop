@@ -111,16 +111,13 @@ exports.getProducts = (req,res,next) => {
     .catch(err => console.log(err))
 }
 
-// exports.postDeleteProduct = (req,res,next) => {
-//     const prodId = req.body.productId;
-//     //Product.destroy({}), this is one way of destroying products, in the curly braces we can the pass the where condition to filter which product to delete
-//     Product.findByPk(prodId)
-//     .then(product => {
-//         return product.destroy();
-//     }) 
-//     .then(result => {//this is the then block for destroy() method
-//         console.log('PRODUCT DELETED');
-//         res.redirect('/admin/products');
-//     })
-//     .catch(err =>  console.log(err));
-// }
+exports.postDeleteProduct = (req,res,next) => {
+    const prodId = req.body.productId;
+    //Product.destroy({}), this is one way of destroying products, in the curly braces we can the pass the where condition to filter which product to delete
+    Product.deleteById(prodId)
+    .then(() => {//this is the then block for destroy() method
+        console.log('PRODUCT DELETED');
+        res.redirect('/admin/products');
+    })
+    .catch(err =>  console.log(err));
+}
