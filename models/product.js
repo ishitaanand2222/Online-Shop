@@ -1,3 +1,4 @@
+const mongodb = require('mongodb');
 const getDb = require('../util/database').getDb;//helps to get access to the database
 class Product{
     constructor(title, price, description, imageUrl){
@@ -26,6 +27,18 @@ class Product{
             return products;
         })
         .catch(err => console.log(err))
+    }
+    //fetching a single product
+    static findByPk(prodId){
+        const db = getDb();
+        return db.collection('products')
+        .find({_id: new mongodb.ObjectId(prodId) })//since the _id is stored in the form of objectId type in mongodb; new is calling a constructor
+        .next()
+        .then(product => {
+            console.log(product);
+            return product;
+        })
+        .catch(err => console.log(err));
     }
 }
 
