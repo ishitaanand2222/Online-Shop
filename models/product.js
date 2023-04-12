@@ -9,22 +9,25 @@ class Product{
         this._id = id;
     }
 
-    save(){
+    save() {
         const db = getDb();
-        let dpOp;
-        if(this._id){
-            //update the product
-            dbOp = db
+        let dbOp;
+        if (this._id) {
+          // Update the product
+          dbOp = db
             .collection('products')
-            .updateOne({_id: new mongodb.ObjectId(this._id)}, { $set: this});
-        }else{
-            dbOp = db.collection('products').insertOne(this);
+            .updateOne({ _id: new mongodb.ObjectId(this._id) }, { $set: this });
+        } else {
+          dbOp = db.collection('products').insertOne(this);
         }
-
-        return dpOp
-        .then(result => console.log(result))
-        .catch(err => console.log(err));
-    }
+        return dbOp
+          .then(result => {
+            console.log(result);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
 
     static fetchAll(){
         const db = getDb();
