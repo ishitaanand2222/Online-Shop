@@ -13,15 +13,7 @@ exports.postAddProduct = (req,res,next) => {
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const description = req.body.description;
-    const product = new Product(title, price, description, imageUrl);
-    // req.user
-    // .createProduct({//this automatically creates a connected model
-    //     title: title,
-    //     price: price,
-    //     imageUrl: imageUrl,
-    //     description: description,
-    //     //userId: req.user.id//associating user to the new products
-    // })//since in app.js we defined that user can have many products, hence sequelize automatically creates a new function createProduct(), for user becuz our model is named product
+    const product = new Product(title, price, description, imageUrl, null, req.user._id);
     product
     .save()
     .then( result => {
@@ -54,24 +46,6 @@ exports.getEditProduct = (req, res, next) => {
     })
     .catch(err => {console.log(err)});
 }
-
-
-//here we will construct a new product and will replace the existing one with the new product
-// exports.postEditProduct = (req,res,next) => {
-//     const prodId = req.body.productId
-//     const updatedTitle = req.body.title;
-//     const updatedPrice = req.body.price;
-//     const updatedImageUrl = req.body.imageUrl;
-//     const updatedDesc = req.body.description;
-
-//         const product = new Product(updatedTitle,updatedPrice,updatedDesc,updatedImageUrl, new ObjectId(prodId));
-//         product.save()
-//         .then(result => {//second promise from save
-//         console.log('UPDATED PRODUCT!');
-//         res.redirect('/admin/products');    
-//     })
-//     .catch(err => {console.log(err)});//this will catch errors from both the then blocks
-// }
 
 //here we will construct a new product and will replace the existing one with the new product
 exports.postEditProduct = (req, res, next) => {

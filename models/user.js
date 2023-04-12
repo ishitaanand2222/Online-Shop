@@ -15,11 +15,16 @@ class User{
         // .catch(err => console.log(err))
     }
 
-    static findUserById(userId){
+    static findUserByPk(userId){
         const db = getDb();
-        return db.collection('users').findOne({_id: new ObjectId(userId)})
-        // .then(users => console.log(users))
-        // .catch(err => console.log(err))
+        return db
+        .collection('users')
+        .findOne({_id: new ObjectId(userId)})
+        .then(user => {
+            console.log(user)
+            return user;
+        })
+        .catch(err => console.log(err))
     }
 }
 
