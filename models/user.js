@@ -19,14 +19,20 @@ class User{
 
     addToCart(product){
         //if the product already exist
-        // const cartProduct = this.cart.items.findIndex( cp => {
-        //     return cp._id === product._id;
-        // })
-        
-        //if product is not present in the cart
-        //items is the property which we have defined and items will have all the existing properties of product + One additional property which is quantity
+        const cartProductIndex = this.cart.items.findIndex( cp => {
+            return cp.productId.toString() === product._id.toString();
+        })
+        let newQuantity = 1;
+        const updatedCartItems = [...this.cart.items];
+
+        if(cartProductIndex >= 0){//if item is having an index ie already present hence quantity + 1
+            newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+            updatedCartItems[cartProductIndex].quantity = newQuantity;
+        }else{//if product is not present in the cart
+            updatedCartItems.push({productId: new ObjectId(product._id), quantity: newQuantity})
+        }
         const updatedCart = {
-            items: [{productId: new ObjectId(product._id), quantity: 1}]
+            items: updatedCartItems
         };
 
         const db = getDb();
