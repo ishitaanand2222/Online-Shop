@@ -96,36 +96,41 @@ exports.postCartDeleteProduct = (req, res, next) => {
 //adding new products to cart
 exports.postCart = (req,res,next) => {
     const prodId = req.user.productId;
-    let fetchedCart;
-    let newQuantity = 1;
-    req.user
-    .getCart()
-    .then(cart => {
-        //here we'll check if product is already a part of the cart, if it is then we'll just increase the quantity of the product
-        fetchedCart = cart;
-        return cart.getProducts({where: { id: prodId } });
+    Product.findByPk(prodId)
+    .then(product => {
+        return req.user.addToCart(product)
     })
-    .then(products => {
-        let product;
-        if(products.length > 0){
-            product = products[0];
-        }
-        if(product){//if an existing product, increase quantity by 1, for many to many relationships
-            const oldQuantity = product.cartItem.quantity;
-            newQuantity = oldQuantity + 1;
-            return product;
-        }
-        return  Product.findByPk(prodId)
-    })
-    .then((product) => {
-        return fetchedCart.addProduct(product, {
-            through: {quantity: newQuantity}
-        })
-    })
-    .then(() => {
-        res.redirect('/cart');//to redirect to this page when the item has been added
-    })
-    .catch(err => console.log(err));
+    .then(result => console.log(result));
+    // let fetchedCart;
+    // let newQuantity = 1;
+    // req.user
+    // .getCart()
+    // .then(cart => {
+    //     //here we'll check if product is already a part of the cart, if it is then we'll just increase the quantity of the product
+    //     fetchedCart = cart;
+    //     return cart.getProducts({where: { id: prodId } });
+    // })
+    // .then(products => {
+    //     let product;
+    //     if(products.length > 0){
+    //         product = products[0];
+    //     }
+    //     if(product){//if an existing product, increase quantity by 1, for many to many relationships
+    //         const oldQuantity = product.cartItem.quantity;
+    //         newQuantity = oldQuantity + 1;
+    //         return product;
+    //     }
+    //     return  Product.findByPk(prodId)
+    // })
+    // .then((product) => {
+    //     return fetchedCart.addProduct(product, {
+    //         through: {quantity: newQuantity}
+    //     })
+    // })
+    // .then(() => {
+    //     res.redirect('/cart');//to redirect to this page when the item has been added
+    // })
+    // .catch(err => console.log(err));
 }
 
 exports.postOrder = (req,res,next) => {
