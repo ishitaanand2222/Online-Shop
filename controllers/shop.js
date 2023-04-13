@@ -71,21 +71,11 @@ exports.getCart = (req,res,next) => {
 //deleting the product from the cart only
 exports.postCartDeleteProduct = (req, res, next) => {
     const prodId = req.body.productId; 
-    req.user.getCart()
-    .then(cart => {
-        return cart.getProducts({where : { id: prodId}});
-    })
-    .then(products => {
-        const product = products[0];
-        product.cartItem.destroy();
-    })
+    req.user.deleteItemFromCart(prodId)
     .then(result => {
         res.redirect('/cart');
     })
     .catch(err => console.log(err));
-    Product.findById(prodId, product => {
-        Cart.deleteProduct(prodId, product.price);
-    })
 }
 
 //adding new products to cart
@@ -99,36 +89,6 @@ exports.postCart = (req,res,next) => {
         console.log(result);
         res.redirect('/cart');
     });
-    // let fetchedCart;
-    // let newQuantity = 1;
-    // req.user
-    // .getCart()
-    // .then(cart => {
-    //     //here we'll check if product is already a part of the cart, if it is then we'll just increase the quantity of the product
-    //     fetchedCart = cart;
-    //     return cart.getProducts({where: { id: prodId } });
-    // })
-    // .then(products => {
-    //     let product;
-    //     if(products.length > 0){
-    //         product = products[0];
-    //     }
-    //     if(product){//if an existing product, increase quantity by 1, for many to many relationships
-    //         const oldQuantity = product.cartItem.quantity;
-    //         newQuantity = oldQuantity + 1;
-    //         return product;
-    //     }
-    //     return  Product.findByPk(prodId)
-    // })
-    // .then((product) => {
-    //     return fetchedCart.addProduct(product, {
-    //         through: {quantity: newQuantity}
-    //     })
-    // })
-    // .then(() => {
-    //     res.redirect('/cart');//to redirect to this page when the item has been added
-    // })
-    // .catch(err => console.log(err));
 }
 
 exports.postOrder = (req,res,next) => {
