@@ -6,7 +6,7 @@ class User{
     User(username, email, cart, id){
         this.name = username,
         this.email = email,
-        this.cart = cart,
+        this.cart = cart,// {items: []}
         this._id = id
     }
 
@@ -29,7 +29,10 @@ class User{
             newQuantity = this.cart.items[cartProductIndex].quantity + 1;
             updatedCartItems[cartProductIndex].quantity = newQuantity;
         }else{//if product is not present in the cart
-            updatedCartItems.push({productId: new ObjectId(product._id), quantity: newQuantity})
+            updatedCartItems.push(
+                {productId: new ObjectId(product._id), 
+                quantity: newQuantity}
+                )
         }
         const updatedCart = {
             items: updatedCartItems
@@ -40,6 +43,27 @@ class User{
             {_id : new ObjectId(this._id)}, 
             {$set: {cart: updatedCart}}//it will override the old cart with new cart
         )
+    }
+
+    getCart(){
+        //here will return a fully populated cart ie a cart with all the details
+        const db = getDb();
+        const productIds = this.cart.items.map(i => {
+            return i.productId;
+        })
+        //find(): all products in the cart
+        return db.collection('products').find({_id: { $in: productIds}})
+        .toArray()
+        .then(products => {
+            return products.map(p => {
+                return {
+                    ...p,
+                    quantity: this.cart.items.find( i => {
+                        return i.productId.toString() === p._id.toString();
+                    }).quantity
+                }
+            })
+        })
     }
 
     static findUserByPk(userId){
